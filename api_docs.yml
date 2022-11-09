@@ -1,0 +1,171 @@
+swagger: "2.0"
+
+info:
+  title: API Document of Translense
+  description: All API of  staging available here.
+
+host: localhost:8080
+basePath: /
+schemes: [http]
+
+consumes: [application/json]
+produces: [application/json]
+
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: authorization
+    in: header
+
+  token:
+    type: apiKey
+    name: auth
+    in: header
+
+
+paths:
+  /api/v1/register:
+    post:
+      summary: Register or sign up
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              user_name:
+                type: string
+              password:
+                type: string
+              role:
+                type: string
+              email:
+                type: string
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  msg:
+                    type: string
+        403:
+          description: Not Authorized
+        500:
+          description: Not Found
+
+  /api/v1/login:
+    post:
+      summary: Login with credentials
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  msg:
+                    type: string
+        403:
+          description: Not Authorized
+        500:
+          description: Not Found
+
+  /api/v1/post:
+    post:
+      summary: Post your story
+      consumes:
+        - application/json
+      security: 
+        - api_key: []
+
+      security:
+        - token: []
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: image
+          in: formData # <-----
+          description: The uploaded file data
+          required: true
+          type: file
+
+        - in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  msg:
+                    type: string
+        403:
+          description: Not Authorized
+        500:
+          description: Not Found
+
+  /api/v1/get-post:
+    get:
+      summary: Get all post posted by user
+      consumes:
+        - application/json
+      security: 
+        - api_key: []
+
+      security:
+        - token: []
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  total_posts:
+                    type: integer
+                  all_posts:
+                    type: object
+        403:
+          description: Not Authorized
+        500:
+          description: Not Found
